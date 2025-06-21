@@ -1,0 +1,92 @@
+# Binarios
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Archivos de test
+*.test
+
+# Archivos de cobertura de Go
+*.out
+*.prof
+
+# Binarios del proyecto
+/bin/
+/dist/
+/build/
+engine-central
+main
+
+# Archivos de configuración sensibles
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# Logs
+*.log
+logs/
+log/
+
+# Archivos temporales del sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dependencias de Node.js (si hay frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de Go
+vendor/
+go.work
+go.work.sum
+
+# Archivos de Docker
+.dockerignore
+
+# Archivos de certificados SSL
+*.pem
+*.key
+*.crt
+*.cert
+
+# Archivos de base de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de backup
+*.bak
+*.backup
+*.tmp
+
+# Archivos de AWS
+.aws/
+
+# Archivos de Kubernetes
+*.kubeconfig
+
+# Archivos de terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Cache de Go
+.cache/ 
