@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  engine-central:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: engine-central
+    env_file:
+      - ../.env
+    ports:
+      - "3050:3050"
+    restart: unless-stopped

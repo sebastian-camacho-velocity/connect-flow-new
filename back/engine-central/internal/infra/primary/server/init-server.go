@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"engine-central/internal/infra/secundary/orderbroker"
 	"engine-central/internal/infra/shared/db"
 	"engine-central/internal/infra/shared/env"
 	"engine-central/internal/infra/shared/log"
@@ -12,11 +13,12 @@ import (
 )
 
 type AppServices struct {
-	Config env.IConfig
-	Logger log.ILogger
-	DB     db.IDatabase
-	Nats   nats.INatsClient
-	S3     s3.IS3
+	Config      env.IConfig
+	Logger      log.ILogger
+	DB          db.IDatabase
+	Nats        nats.INatsClient
+	S3          s3.IS3
+	OrderBroker orderbroker.OrderBroker
 }
 
 func InitServer(ctx context.Context) (*AppServices, error) {
@@ -47,12 +49,15 @@ func InitServer(ctx context.Context) (*AppServices, error) {
 		return nil, err
 	}
 
+	orderBrokerClient := orderbroker.NewClient(env)
+
 	services := &AppServices{
-		Config: env,
-		Logger: logger,
-		DB:     database,
-		Nats:   natsClient,
-		S3:     s3Client,
+		Config:      env,
+		Logger:      logger,
+		DB:          database,
+		Nats:        natsClient,
+		S3:          s3Client,
+		OrderBroker: orderBrokerClient,
 	}
 
 	port := services.Config.Get("API_PORT")
