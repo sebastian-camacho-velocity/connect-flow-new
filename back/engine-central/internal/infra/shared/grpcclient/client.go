@@ -1,4 +1,4 @@
-package grpc
+package grpcclient
 
 import (
 	"context"
@@ -13,10 +13,9 @@ type GRPCClientConfig struct {
 	Timeout           time.Duration
 	MaxBackoff        time.Duration
 	MinConnectTimeout time.Duration
-	WithInsecure      bool // true si no hay TLS
+	WithInsecure      bool
 }
 
-// NewGRPCClient crea una conexión gRPC configurable
 func NewGRPCClient(cfg GRPCClientConfig) (*grpc.ClientConn, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 	defer cancel()
@@ -31,13 +30,13 @@ func NewGRPCClient(cfg GRPCClientConfig) (*grpc.ClientConn, error) {
 			},
 			MinConnectTimeout: cfg.MinConnectTimeout,
 		}),
-		grpc.WithBlock(), // espera hasta que conecte
+		grpc.WithBlock(),
 	}
 
 	if cfg.WithInsecure {
 		opts = append(opts, grpc.WithInsecure())
 	} else {
-		// Puedes agregar aquí configuración TLS si la necesitas
+
 	}
 
 	return grpc.DialContext(ctx, cfg.Address, opts...)

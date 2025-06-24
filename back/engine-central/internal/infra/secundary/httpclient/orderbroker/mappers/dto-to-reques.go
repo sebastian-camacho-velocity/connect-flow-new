@@ -1,11 +1,12 @@
-package mapperorderbroker
+package mappers
 
 import (
-	"engine-central/internal/domain/dtos"
-	"engine-central/internal/infra/secundary/orderbroker/request"
+	"engine-central/internal/domain"
+	"engine-central/internal/infra/secundary/httpclient/orderbroker/request"
+	"engine-central/internal/infra/secundary/httpclient/orderbroker/response"
 )
 
-func ToOrderBrokerRequest(in dtos.CreateOrderReq) request.CreateOrderReq {
+func ToOrderBrokerRequest(in domain.CreateOrderReq) request.CreateOrderReq {
 	return request.CreateOrderReq{
 		BusinessID:                 in.BusinessID,
 		ExternalOrderID:            in.ExternalOrderID,
@@ -41,8 +42,8 @@ func ToOrderBrokerRequest(in dtos.CreateOrderReq) request.CreateOrderReq {
 	}
 }
 
-func FromOrderBrokerRequest(in request.CreateOrderReq) dtos.CreateOrder {
-	return dtos.CreateOrder{
+func FromOrderBrokerRequest(in request.CreateOrderReq) domain.CreateOrder {
+	return domain.CreateOrder{
 		BusinessID:            in.BusinessID,
 		ExternalOrderID:       derefStr(in.ExternalOrderID),
 		ExternalIntegrationID: derefInt(in.ExternalIntegrationID),
@@ -67,6 +68,12 @@ func FromOrderBrokerRequest(in request.CreateOrderReq) dtos.CreateOrder {
 		Total:                 derefFloat64(in.Total),
 		Boxes:                 in.Boxes,
 		OrderStatusID:         in.OrderStatusID,
+	}
+}
+
+func FromOrderBrokerResponse(res response.CreateOrderRes) domain.Order {
+	return domain.Order{
+		OrderId: res.OrderId,
 	}
 }
 
@@ -108,7 +115,7 @@ func derefFloat64(f *float64) float64 {
 	return *f
 }
 
-func toOrderBrokerCustomer(in dtos.CustomerOrderReq) request.CustomerOrderReq {
+func toOrderBrokerCustomer(in domain.CustomerOrderReq) request.CustomerOrderReq {
 	return request.CustomerOrderReq{
 		FullName:          in.FullName,
 		MobilePhoneNumber: in.MobilePhoneNumber,
@@ -117,8 +124,8 @@ func toOrderBrokerCustomer(in dtos.CustomerOrderReq) request.CustomerOrderReq {
 		Email:             in.Email,
 	}
 }
-func fromOrderBrokerCustomer(in request.CustomerOrderReq) dtos.CustomerOrderReq {
-	return dtos.CustomerOrderReq{
+func fromOrderBrokerCustomer(in request.CustomerOrderReq) domain.CustomerOrderReq {
+	return domain.CustomerOrderReq{
 		FullName:          in.FullName,
 		MobilePhoneNumber: in.MobilePhoneNumber,
 		DocumentTypeId:    in.DocumentTypeId,
@@ -126,7 +133,7 @@ func fromOrderBrokerCustomer(in request.CustomerOrderReq) dtos.CustomerOrderReq 
 		Email:             in.Email,
 	}
 }
-func toOrderBrokerShipping(in dtos.ShippingOrderReq) request.ShippingOrderReq {
+func toOrderBrokerShipping(in domain.ShippingOrderReq) request.ShippingOrderReq {
 	return request.ShippingOrderReq{
 		Country:           in.Country,
 		State:             in.State,
@@ -141,8 +148,8 @@ func toOrderBrokerShipping(in dtos.ShippingOrderReq) request.ShippingOrderReq {
 		CityDaneId:        in.CityDaneId,
 	}
 }
-func fromOrderBrokerShipping(in request.ShippingOrderReq) dtos.ShippingOrderReq {
-	return dtos.ShippingOrderReq{
+func fromOrderBrokerShipping(in request.ShippingOrderReq) domain.ShippingOrderReq {
+	return domain.ShippingOrderReq{
 		Country:           in.Country,
 		State:             in.State,
 		City:              in.City,
@@ -156,20 +163,20 @@ func fromOrderBrokerShipping(in request.ShippingOrderReq) dtos.ShippingOrderReq 
 		CityDaneId:        in.CityDaneId,
 	}
 }
-func toOrderBrokerShippingPtr(in *dtos.ShippingOrderReq) *request.ShippingOrderReq {
+func toOrderBrokerShippingPtr(in *domain.ShippingOrderReq) *request.ShippingOrderReq {
 	if in == nil {
 		return nil
 	}
 	v := toOrderBrokerShipping(*in)
 	return &v
 }
-func fromOrderBrokerShippingPtr(in *request.ShippingOrderReq) dtos.ShippingOrderReq {
+func fromOrderBrokerShippingPtr(in *request.ShippingOrderReq) domain.ShippingOrderReq {
 	if in == nil {
-		return dtos.ShippingOrderReq{}
+		return domain.ShippingOrderReq{}
 	}
 	return fromOrderBrokerShipping(*in)
 }
-func toOrderBrokerProducts(in []dtos.ProductOrderReq) []request.ProductOrderReq {
+func toOrderBrokerProducts(in []domain.ProductOrderReq) []request.ProductOrderReq {
 	out := make([]request.ProductOrderReq, len(in))
 	for i, p := range in {
 		out[i] = request.ProductOrderReq{
@@ -195,10 +202,10 @@ func toOrderBrokerProducts(in []dtos.ProductOrderReq) []request.ProductOrderReq 
 	}
 	return out
 }
-func fromOrderBrokerProducts(in []request.ProductOrderReq) []dtos.ProductOrderReq {
-	out := make([]dtos.ProductOrderReq, len(in))
+func fromOrderBrokerProducts(in []request.ProductOrderReq) []domain.ProductOrderReq {
+	out := make([]domain.ProductOrderReq, len(in))
 	for i, p := range in {
-		out[i] = dtos.ProductOrderReq{
+		out[i] = domain.ProductOrderReq{
 			ProductID:         p.ProductID,
 			Sku:               p.Sku,
 			ExternalId:        p.ExternalId,
@@ -223,8 +230,8 @@ func fromOrderBrokerProducts(in []request.ProductOrderReq) []dtos.ProductOrderRe
 }
 
 // Función auxiliar para convertir dtos.ShippingOrderReq a dtos.CreateShippingOrder
-func shippingOrderReqToCreate(in dtos.ShippingOrderReq) dtos.CreateShippingOrder {
-	return dtos.CreateShippingOrder{
+func shippingOrderReqToCreate(in domain.ShippingOrderReq) domain.CreateShippingOrder {
+	return domain.CreateShippingOrder{
 		Country:           in.Country,
 		State:             in.State,
 		City:              in.City,
@@ -240,8 +247,8 @@ func shippingOrderReqToCreate(in dtos.ShippingOrderReq) dtos.CreateShippingOrder
 }
 
 // Función auxiliar para convertir dtos.CustomerOrderReq a dtos.CreateCustomerOrder
-func customerOrderReqToCreate(in dtos.CustomerOrderReq) dtos.CreateCustomerOrder {
-	return dtos.CreateCustomerOrder{
+func customerOrderReqToCreate(in domain.CustomerOrderReq) domain.CreateCustomerOrder {
+	return domain.CreateCustomerOrder{
 		FullName:          in.FullName,
 		MobilePhoneNumber: in.MobilePhoneNumber,
 		DocumentTypeId:    in.DocumentTypeId,

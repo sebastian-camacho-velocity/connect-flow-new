@@ -40,6 +40,12 @@ func New(config env.IConfig, logger log.ILogger) INatsClient {
 		return nil
 	}
 
+	if !conn.IsConnected() {
+		logger.Error().Err(err).Msg("No se pudo conectar a NATS")
+		conn.Close()
+		return nil
+	}
+
 	js, err := conn.JetStream()
 	if err != nil {
 		logger.Error(nil).Err(err).Msg("Error inicializando JetStream")

@@ -3,12 +3,11 @@ package usecaseorders
 import (
 	"context"
 	"engine-central/internal/domain"
-	"engine-central/internal/domain/dtos"
 )
 
-func (s *OrderUseCase) CreateOrder(ctx context.Context, req dtos.CreateOrder) (dtos.Order, error) {
+func (s *OrderUseCase) CreateOrder(ctx context.Context, req domain.CreateOrder) (domain.Order, error) {
 
-	orderBrokerReq := dtos.CreateOrderReq{}
+	orderBrokerReq := domain.CreateOrderReq{}
 	if req.OrderNumber != "" {
 		orderBrokerReq.OrderNumber = &req.OrderNumber
 	}
@@ -47,14 +46,14 @@ func (s *OrderUseCase) CreateOrder(ctx context.Context, req dtos.CreateOrder) (d
 		orderBrokerReq.ExtraData = req.ExtraData
 	}
 
-	orderBrokerReq.Customer = dtos.CustomerOrderReq{
+	orderBrokerReq.Customer = domain.CustomerOrderReq{
 		FullName:          req.Customer.FullName,
 		MobilePhoneNumber: req.Customer.MobilePhoneNumber,
 		DocumentTypeId:    req.Customer.DocumentTypeId,
 		Dni:               req.Customer.Dni,
 		Email:             req.Customer.Email, // TODO: check if is necessart create generic info
 	}
-	orderBrokerReq.Shipping = dtos.ShippingOrderReq{
+	orderBrokerReq.Shipping = domain.ShippingOrderReq{
 		Country:           req.Shipping.Country,
 		State:             req.Shipping.State,
 		City:              req.Shipping.City,
@@ -67,8 +66,8 @@ func (s *OrderUseCase) CreateOrder(ctx context.Context, req dtos.CreateOrder) (d
 		Zip:               req.Shipping.Zip,
 		CityDaneId:        req.Shipping.CityDaneId,
 	}
-	if req.OriginShipping != (dtos.CreateShippingOrder{}) {
-		orderBrokerReq.OriginShipping = &dtos.ShippingOrderReq{
+	if req.OriginShipping != (domain.CreateShippingOrder{}) {
+		orderBrokerReq.OriginShipping = &domain.ShippingOrderReq{
 			Country:           req.OriginShipping.Country,
 			State:             req.OriginShipping.State,
 			City:              req.OriginShipping.City,
@@ -83,9 +82,9 @@ func (s *OrderUseCase) CreateOrder(ctx context.Context, req dtos.CreateOrder) (d
 		}
 	}
 
-	var products []dtos.ProductOrderReq
+	var products []domain.ProductOrderReq
 	for _, p := range req.Products {
-		products = append(products, dtos.ProductOrderReq{
+		products = append(products, domain.ProductOrderReq{
 			ProductID:  p.ProductID,
 			Sku:        p.Sku,
 			ExternalId: p.ExternalId,
@@ -126,8 +125,8 @@ func (s *OrderUseCase) CreateOrder(ctx context.Context, req dtos.CreateOrder) (d
 	_, err := s.orderBroker.CreateOrder(ctx, orderBrokerReq)
 	if err != nil {
 		s.log.Error(ctx).Err(err).Msg("failed to create order")
-		return dtos.Order{}, err
+		return domain.Order{}, err
 	}
 
-	return dtos.Order{}, err
+	return domain.Order{}, err
 }

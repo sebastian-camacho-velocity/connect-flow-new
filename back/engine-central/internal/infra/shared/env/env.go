@@ -98,6 +98,7 @@ type Config struct {
 	BsaleCurrierUrl    string `env:"BSALE_CURRIER_URL,required"`
 	ParisUrl           string `env:"PARIS_URL,required"`
 	ViteConnectFlowUrl string `env:"VITE_CONNECT_FLOW_URL,required"`
+	GrpcPort           string `env:"GRPC_PORT"`
 }
 
 func splitTag(tag string) []string {

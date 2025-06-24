@@ -1,4 +1,4 @@
-package dtos
+package domain
 
 import "time"
 
@@ -84,7 +84,10 @@ type UpdateOrderStatusReq struct {
 	Notes         string
 	ExtraData     any
 }
-type Order struct{}
+
+type Order struct {
+	OrderId string
+}
 
 type CreateOrderReq struct {
 	BusinessID                 string

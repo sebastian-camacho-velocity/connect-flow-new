@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package request;
+option go_package = "engine-central/internal/infra/primary/grpc/order/request;request";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+message CreateOrderRequest {
+  string order_number = 1;
+  string external_order_id = 2;
+  string business_id = 3;
+  int32 integration_type_id = 4;
+  int32 external_integration_id = 5;
+  uint32 order_type_id = 6;
+  double total_shipment = 7;
+  string tracking_number = 8;
+  int32 payment_method_id = 9;
+  string payment_type_raw = 10;
+  int32 payment_type_id = 11;
+  int32 country_id = 12;
+  string country_name_raw = 13;
+  int32 warehouse_id = 14;
+  google.protobuf.Struct extra_data = 15;
+  CreateCustomerOrder customer = 16;
+  CreateShippingOrder shipping = 17;
+  CreateShippingOrder origin_shipping = 18;
+  repeated ProductOrderReq items = 19;
+  repeated string notes = 20;
+  double cod_total = 21;
+  google.protobuf.Timestamp delivery_date = 22;
+  string coupon = 23;
+  double discount = 24;
+  double total = 25;
+  int32 boxes = 26;
+  bool is_last_mile = 27;
+  bool invoiceable = 28;
+  int32 order_status_id = 29;
+}
+
+message CreateCustomerOrder {
+  string full_name = 1;
+  string mobile_phone_number = 2;
+  int32 document_type_id = 3;
+  string dni = 4;
+  string email = 5;
+}
+
+message CreateShippingOrder {
+  string country = 1;
+  string state = 2;
+  string city = 3;
+  string address = 4;
+  string address_line = 5;
+  string mobile_phone_number = 6;
+  string full_name = 7;
+  string zip = 8;
+  google.protobuf.DoubleValue lat = 9;
+  google.protobuf.DoubleValue lng = 10;
+  google.protobuf.Int32Value city_dane_id = 11;
+}
+
+message ProductOrderReq {
+  google.protobuf.StringValue product_id = 1;
+  google.protobuf.StringValue sku = 2;
+  google.protobuf.StringValue external_id = 3;
+  google.protobuf.StringValue ean = 4;
+  string name = 5;
+  google.protobuf.StringValue notes = 6;
+  google.protobuf.DoubleValue large = 7;
+  google.protobuf.DoubleValue width = 8;
+  google.protobuf.DoubleValue weight = 9;
+  google.protobuf.DoubleValue height = 10;
+  int64 measurement_unit_id = 11;
+  string description = 12;
+  int32 quantity = 13;
+  double price = 14;
+  double discount = 15;
+  google.protobuf.DoubleValue tax = 16;
+  repeated ProductOrderReq items = 17;
+  bool is_custom_kit = 18;
+  bool active = 19;
+}
+
+service OrderService {
+  rpc CreateOrder (CreateOrderRequest) returns (google.protobuf.Empty);
+} 

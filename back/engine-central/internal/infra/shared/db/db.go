@@ -66,7 +66,6 @@ func (d *database) Connect(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	d.log.Info(ctx).Msg("Database connection established successfully")
 	d.conn = d.conn.Omit(clause.Associations).Session(&gorm.Session{
 		FullSaveAssociations: false,
 	})

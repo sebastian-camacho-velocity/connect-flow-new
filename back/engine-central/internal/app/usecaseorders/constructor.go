@@ -1,18 +1,23 @@
 package usecaseorders
 
 import (
-	"engine-central/internal/infra/secundary/orderbroker"
+	"context"
+	"engine-central/internal/domain"
 	"engine-central/internal/infra/shared/log"
 )
 
+type IUseCaseOrders interface {
+	CreateOrder(ctx context.Context, req domain.CreateOrder) (domain.Order, error)
+}
+
 type OrderUseCase struct {
-	orderBroker orderbroker.OrderBroker
+	orderBroker domain.IOrderBroker
 	log         log.ILogger
 }
 
-func NewOrderUseCase(ob orderbroker.OrderBroker, log log.ILogger) *OrderUseCase {
+func NewOrderUseCase(orderBroker domain.IOrderBroker, log log.ILogger) IUseCaseOrders {
 	return &OrderUseCase{
-		orderBroker: ob,
+		orderBroker: orderBroker,
 		log:         log,
 	}
 }
